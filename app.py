@@ -30,36 +30,40 @@ def index():
 )
 def procesar_excel():    
     try:
-
         archivo = request.files["archivo"]
-
-        ruta = os.path.join(
-
-            app.config["UPLOAD_FOLDER"],
-            archivo.filename
-        )
-
+        ruta = os.path.join(app.config["UPLOAD_FOLDER"], archivo.filename)
         archivo.save(ruta)
 
         df = pd.read_excel(ruta)
-
         resultados = []
 
+        # Asegúrate de que el nombre de la columna en Excel coincida
+        # Si tu columna se llama "comando", esto funcionará:
+        for index, row in df.iterrows():
+            linea = str(row['comando']) 
+            
+            # 1. Validar
+            validacion = validar_sintaxis(linea)
+            
+            if validacion["valido"]:
+                # 2. Interpretar
+                op_interpretada = interpretar(linea)
+                # 3. Transformar
+                resultado_final = transformar(op_interpretada)
+                resultados.append({"fila": index + 1, "estado": "OK", "data": resultado_final})
+            else:
+                # Si falló la validación, guardamos el error
+                resultados.append({"fila": index + 1, "estado": "Error", "detalles": validacion})
+
         return jsonify({
-
             "ok": True,
-            "mensaje":
-            "Excel leído correctamente"
-
+            "resultados": resultados
         })
 
     except Exception as e:
-
         return jsonify({
-
             "ok": False,
             "error": str(e)
-
         })
     
 if __name__ == "__main__":
