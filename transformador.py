@@ -1,4 +1,7 @@
-#aqui entran los archivos en excel
+CATALOGO_PROVEEDORES = {
+    "PROV-AGRO-001": {"nombre": "Agro Alimentos S.A."},
+    # Agrega otros proveedores aquí
+}
 
 CATALOGO_PRODUCTOS = {
 
