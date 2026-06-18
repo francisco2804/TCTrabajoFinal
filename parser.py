@@ -76,6 +76,12 @@ def validar_sintaxis(linea):
     patron_esperado = PATRONES[operacion]
     #tf
 
+     if len(tokens_obtenidos) > len(patron_esperado):
+            return {
+                "valido": False,
+                "error": "Demasiados elementos"
+            }
+
     for i in range(len(patron_esperado)):
         if i >= len(tokens_obtenidos):
 
@@ -96,11 +102,7 @@ def validar_sintaxis(linea):
                 "recibido": tokens_obtenidos[i]
             }
         
-        if len(tokens_obtenidos) > len(patron_esperado):
-            return {
-                "valido": False,
-                "error": "Demasiados elementos"
-            }
+    
 
     return {
         "valido": True,
